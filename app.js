@@ -60,7 +60,6 @@ app.route("/articles")
 /////////////////////// Request Targeting a Spesific Articles ///////////////////////
 app.route("/articles/:articleTitle")
   .get((req, res) => {
-    console.log(req.params.articleTitle);
     Article.findOne({
       title: req.params.articleTitle
     }).then((foundArticle, err) => {
@@ -69,6 +68,17 @@ app.route("/articles/:articleTitle")
       } else {
         res.send("No articles matching that title was found.");
       }
+    });
+  })
+  .put((req, res) => {
+    Article.replaceOne(
+      {title: req.params.articleTitle},
+      {title: req.body.title, content: req.body.content},
+      {overwrite: true}
+    ).then(() => {
+      res.send("Successfully replaced article.");
+    }).catch((err) => {
+      res.send(err);
     });
   });
 
