@@ -21,8 +21,9 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
-app.get("/articles", (req, res) => {
-  Article.find()
+app.route("/articles")
+  .get((req, res) => {
+    Article.find()
     .then((err, foundArticles) => {
       if (!err) {
         res.send(foundArticles);
@@ -30,34 +31,30 @@ app.get("/articles", (req, res) => {
         res.send(err);
       }
     });
-});
+  }).post((req, res) => {
+    const newArticle = new Article({
+      title: req.body.title,
+      content: req.body.content
+    });
 
-app.post("/articles", (req, res) => {
-  const newArticle = new Article({
-    title: req.body.title,
-    content: req.body.content
+    newArticle.save()
+      .then((err) => {
+        if (!err) {
+          res.send("Successfully added a new Article");
+        } else {
+          res.send(err);
+        }
+      });
+  }).delete((req, res) => {
+    Article.deleteMany({})
+      .then((err) => {
+        if (!err) {
+          res.send("Successfully deleted Articles");
+        } else {
+          res.send(err);
+        }
+      });
   });
-
-  newArticle.save()
-    .then((err) => {
-      if (!err) {
-        res.send("Successfully added a new Article");
-      } else {
-        res.send(err);
-      }
-    });
-});
-
-app.delete("/articles", (req, res) => {
-  Article.deleteMany({})
-    .then((err) => {
-      if (!err) {
-        res.send("Successfully deleted Articles");
-      } else {
-        res.send(err);
-      }
-    });
-});
 
 app.listen(3000, () => {
   console.log("Server started on port 3000");
