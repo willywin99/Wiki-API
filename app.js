@@ -86,10 +86,19 @@ app.route("/articles/:articleTitle")
       {title: req.params.articleTitle},
       {title: req.body.title, content: req.body.content}
     ).then(() => {
-      res.send("Successfully updated article");
+      res.send("Successfully updated article.");
     }).catch((err) => {
       res.send(err);
-    })
+    });
+  })
+  .delete((req, res) => {
+    Article.deleteOne(
+      {title: req.params.articleTitle}
+    ).then(() => {
+      res.send("Successfully deleted the corresponding article.");
+    }).catch((err) => {
+      res.send(err);
+    });
   });
 
 app.listen(3000, () => {
