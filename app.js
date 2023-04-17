@@ -80,6 +80,16 @@ app.route("/articles/:articleTitle")
     }).catch((err) => {
       res.send(err);
     });
+  })
+  .patch((req, res) => {
+    Article.updateOne(
+      {title: req.params.articleTitle},
+      {title: req.body.title, content: req.body.content}
+    ).then(() => {
+      res.send("Successfully updated article");
+    }).catch((err) => {
+      res.send(err);
+    })
   });
 
 app.listen(3000, () => {
